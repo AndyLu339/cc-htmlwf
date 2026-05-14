@@ -1,0 +1,13 @@
+{
+  "name": "cc-htmlwf",
+  "description": "Deliver code changes, plans, and architecture docs as self-contained HTML pages with copy-paste buttons and color diffs. Learner-oriented: generates step-by-step HTML guides with rich comments instead of modifying code directly.",
+  "version": "1.0.0",
+  "author": {
+    "name": "复羽叶栾",
+    "email": "256530373@qq.com"
+  },
+  "license": "MIT",
+  "keywords": ["html", "code-review", "workflow", "delivery", "learner", "documentation"],
+  "homepage": "https://github.com/fuyuyeluan/cc-htmlwf",
+  "skills": ["./skills/html-code-delivery"]
+}

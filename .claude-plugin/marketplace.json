@@ -1,0 +1,25 @@
+{
+  "name": "cc-htmlwf",
+  "owner": {
+    "name": "复羽叶栾",
+    "email": "256530373@qq.com"
+  },
+  "metadata": {
+    "description": "HTML-based code delivery workflow for Claude Code. Learner-oriented: generates step-by-step HTML guides with rich comments, copy buttons, and color diffs. Uses file-system directory management for organized output.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "cc-htmlwf",
+      "source": "./",
+      "description": "Deliver code changes as interactive HTML pages with copy-paste support, green/red diffs, explanation tables, and rich Chinese comments. Designed for learners who want to review and understand changes before applying them.",
+      "version": "1.0.0",
+      "author": {
+        "name": "复羽叶栾",
+        "email": "256530373@qq.com"
+      },
+      "keywords": ["html", "code-review", "workflow", "delivery", "learner", "documentation"],
+      "category": "workflow"
+    }
+  ]
+}
