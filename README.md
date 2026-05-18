@@ -1,68 +1,113 @@
-# HTML Code Delivery — Claude Code Skill
+# HTML Code Delivery — Claude Code 技能
 
-## What is this?
+## 这是什么？
 
-A Claude Code skill that makes the AI agent deliver answers through **self-contained HTML files** instead of editing your code directly. Each HTML file includes syntax-highlighted code blocks, one-click copy buttons, change comparison tables, and auto-opens in your browser when done.
+一个 Claude Code 技能，让 AI 智能体通过**自包含的 HTML 文件**输出回答，而不是直接修改你的代码。每个 HTML 文件都带语法高亮的代码块、一键复制按钮、变更对照表格，写完自动弹出到浏览器。
 
-## Why HTML instead of Markdown?
+## 为什么用 HTML 而不是 Markdown？
 
-HTML does things Markdown can't:
+HTML 可以做到 Markdown 做不到的事：
 
-- **Color diffs** — new lines in green, deleted lines in red with strikethrough, changes at a glance
-- **Copy buttons** — every code block has a copy button in the top-right corner
-- **Rich layout** — tables, tags, callout boxes for structured change presentation
-- **Self-contained** — a single `.html` file is the complete document, no renderer needed
+- **颜色 diff** — 新增行绿色背景，删除行红色背景+删除线，一眼看出改动
+- **Copy 按钮** — 每个代码块右上角有复制按钮，点击即复制到剪贴板
+- **富布局** — 表格、标签、信息框，结构化展示变更内容
+- **自包含** — 一个 `.html` 文件就是完整文档，不需要任何渲染工具
 
-## Use Cases
+## 做什么用？
 
-| Scenario | Example |
-|----------|---------|
-| Design proposals | Deliver an architecture plan as HTML for review before writing any code |
-| Architecture docs | Diagram call chains, component relationships, compare old vs new approaches |
-| Step-by-step guides | Break a large refactor into L1→L2→L3 HTML files, ~150 lines of changes each |
-| Code analysis | Analyze design issues or performance bottlenecks, referencing specific files and line numbers |
-| Reference docs | Compile API interfaces and module conventions as team reference material |
+| 场景 | 例子 |
+|------|------|
+| 设计方案 | 在写代码之前，先出一份架构方案 HTML，用户审阅后再动手 |
+| 架构说明 | 画调用链路、组件关系，用表格+标签对比新旧方案 |
+| 分步引导 | 把一个大重构拆成 L1→L2→L3 多个 HTML 文件，每步 ~150 行改动 |
+| 代码分析 | 分析已有代码的设计问题、性能瓶颈，标注具体文件和行号 |
+| 参考文档 | 整理 API 接口、模块约定，作为团队参考资料 |
 
-## Output is Files, Not Commands
+## 面向学习者设计
 
-This skill does **not modify your code directly**. It writes the changes into HTML files, and you copy-paste them into your editor yourself. This matters especially for learners — at each step, you can see exactly what changed, why, and where it goes.
+这个技能**不会直接改你的代码**。它把改动内容写成 HTML 文件，让你自己复制粘贴到编辑器里。每一步你都能看清改了什么、为什么改、放在哪个文件。
 
-Every code block includes **comments** explaining the design intent — defaulting to Chinese, but you can ask the agent to use English comments instead. These aren't "what does this line do" filler comments; they're "why was this design chosen" intent comments.
+代码块中保留了**丰富的中文注释**，解释设计意图——不是"这行做了什么"式的废话，而是"为什么这样设计"的决策注释。你可以在粘贴之前读完注释，理解设计思路。
 
-## File Structure
+默认使用中文注释，如果需要英文注释，直接告诉智能体即可。
 
-Output HTML is organized into categorized directories:
+## 文件系统管理
+
+输出的 HTML 不会堆在一处，而是按分类目录组织，像一个结构化的文档项目：
 
 ```
 docs/
-├── 计划/ (Plans)        # Architecture proposals, migration strategies
-├── 实现指南/ (Guides)   # Step-by-step implementation (L1a, L1b, L2...)
-├── 参考/ (References)   # API docs, module conventions
-├── 分析/ (Analysis)     # Code analysis reports, side-by-side comparisons
-└── 模板.html            # CSS framework template
+├── 计划/          # 总体规划、架构方案
+├── 实现指南/      # 分步实现（L1a, L1b, L2...）
+├── 参考/          # API 文档、模块约定、设计参考
+├── 分析/          # 代码分析报告、方案对比
+└── 模板.html      # CSS 框架模板
 ```
 
-## Contributing
+每个逻辑步骤一个文件，不会把所有内容塞进一个巨型页面。文件名带层级前缀（L1a, L1b, L2），方便按顺序阅读。
 
-Issues, PRs, and forks are welcome — this project is young and any improvement helps.
-
-- Author: 复羽叶栾 (256530373@qq.com)
-- Repository: https://github.com/fuyuyeluan/cc-htmlwf
-
-## Installation
-
-Place `claude-html-workflow/` in your Claude Code plugins directory:
+## 工作流示例
 
 ```
-~/.claude/plugins/claude-html-workflow/
+用户: "把 Cargo.toml 的依赖从 riscv 换成 polyhal"
+
+智能体:
+  1. 读取当前代码
+  2. 写 docs/实现指南/L1a-Cargo依赖配置.html
+     - 完整新文件内容，带 Copy 按钮
+     - 颜色 diff（绿色=新增，红色=删除）
+     - 变更解释表（变更/旧/新/原因）
+     - 中文注释解释每个关键选择
+  3. xdg-open 在浏览器中打开
+
+用户:
+  1. 浏览器看到格式漂亮的变更页面
+  2. 点 Copy 按钮，粘贴到编辑器
+  3. 读完中文注释，理解了为什么这样改
+  4. 告诉智能体"下一步"→ 继续 L1b
 ```
 
-## Usage
+## 安装
 
-Just describe what you need in Claude Code — the skill triggers automatically. For example:
+### 方式 A：本地安装
 
-- "Design an auth system architecture"
-- "Write up the L3 memory management migration plan"
-- "Analyze the trap flow call chain"
+```bash
+claude plugin install /path/to/claude-html-workflow
+```
 
-Every HTML file auto-opens in your browser via `xdg-open` when complete.
+### 方式 B：从 Git 仓库安装
+
+```bash
+# 把文件夹推送到 git 仓库，然后在 Claude Code 中：
+/plugin marketplace add <仓库URL>
+/plugin install html-code-delivery@html-code-delivery-workflow
+```
+
+### 方式 C：复制到项目
+
+直接把 `skills/html-code-delivery/SKILL.md` 内容追加到项目的 `CLAUDE.md` 末尾。
+
+## 触发条件
+
+智能体在以下场景自动使用此技能：
+- 用户说"先让我看看改了哪些"、"不要直接改文件"、"让我自己粘贴"
+- 交付分步实现计划中的某个步骤
+- 写架构文档、计划、分析报告
+
+以下场景不触发：
+- 用户说"直接改"、"修一下"
+- 单行 bug fix
+- 改动微小且明显
+
+## 配合 andrej-karpathy-skills
+
+## 维护与贡献
+
+欢迎提 Issue、发 PR，或直接 Fork 修改。这个项目还很年轻，任何改进建议都欢迎。
+
+- 作者：复羽叶栾 (256530373@qq.com)
+- 仓库：https://github.com/fuyuyeluan/cc-htmlwf
+
+## 配合 andrej-karpathy-skills
+
+建议同时安装 [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)，提供"先想再写"、"极简优先"、"手术式修改"、"目标驱动"四准则，与本技能的 HTML 交付流程互补。
