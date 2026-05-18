@@ -30,26 +30,31 @@ Use the CSS from `TEMPLATE.html` without modification. It already has the correc
 
 ### 2. Color Coding (CRITICAL)
 
-Use these exact CSS classes to mark code changes:
+Use these exact CSS classes to mark code changes (dark theme: black background `#0d1117`, white text `#e6edf3`):
 
 ```css
-.hl-add { color: var(--good-fg); background: #d1fae5; }  /* green — new code */
-.hl-del { color: var(--bad-fg); background: #fee2e2; text-decoration: line-through; }  /* red — deleted code */
-.tag-add { background: #dbeafe; color: #1e40af; }  /* tag: NEW */
-.tag-del { background: var(--bad-bg); color: var(--bad-fg); }  /* tag: DELETE */
-.tag-mod { background: var(--warn-bg); color: var(--warn-fg); }  /* tag: MODIFY */
+.hl-add { color: var(--add-fg); background: var(--add-bg); }  /* green #3fb950 — 新增代码 */
+.hl-mod { color: var(--mod-fg); background: var(--mod-bg); }  /* blue #58a6ff — 修改代码 */
+.hl-del { color: var(--del-fg); background: var(--del-bg); text-decoration: line-through; }  /* red #f85149 — 删除代码 */
+.tag-add { background: #0d2137; color: #58a6ff; }  /* tag: NEW — 新增文件/模块 */
+.tag-del { background: var(--bad-bg); color: var(--bad-fg); }  /* tag: DELETE — 删除文件/模块 */
+.tag-mod { background: var(--warn-bg); color: var(--warn-fg); }  /* tag: MODIFY — 修改文件 */
+.tag-keep { background: var(--good-bg); color: var(--good-fg); }  /* tag: KEEP — 保留不变 */
 ```
 
 For inline diffs within a code block, wrap lines in spans:
 ```html
-<span class="hl-add">polyhal = "0.4.0"</span>
-<span class="hl-del">riscv = { git = "..." }</span>
+<span class="hl-add">polyhal = "0.4.0"</span>      <!-- 新加行 — 绿色 -->
+<span class="hl-mod">use polyhal::MappingFlags;</span>  <!-- 修改行 — 蓝色 -->
+<span class="hl-del">use crate::mm::MapPermission;</span> <!-- 删除行 — 红色 -->
 ```
 
-For full-file code blocks, use a "diff view" pattern:
+For full-file code blocks, use the `.ln` span for line numbers:
 ```html
-<pre><code id="code1"><span class="hl-add">// Entire new file content here</span></code></pre>
+<pre><code id="code1"><span class="ln hl-add">// 新文件全部内容</span></code></pre>
 ```
+
+**Line numbers** are automatic via CSS counter — each code line wrapped in `<span class="ln">` gets a line number on the left.
 
 ### 3. Copy Button (CRITICAL)
 

@@ -6,32 +6,35 @@
 <title>REPLACE_WITH_TITLE</title>
 <style>
   :root {
-    --bg: #fff; --fg: #1a1a2e; --accent: #2563eb; --border: #e2e8f0;
-    --code-bg: #f1f5f9; --muted: #64748b;
-    --good-bg: #d1fae5; --good-fg: #065f46;
-    --bad-bg: #fee2e2; --bad-fg: #991b1b;
-    --warn-bg: #fef3c7; --warn-fg: #92400e;
+    --bg: #0d1117; --fg: #e6edf3; --accent: #58a6ff; --border: #30363d;
+    --code-bg: #161b22; --muted: #8b949e;
+    --good-bg: #12261a; --good-fg: #3fb950;
+    --bad-bg: #2d1216; --bad-fg: #f85149;
+    --warn-bg: #211b07; --warn-fg: #d2991d;
+    --add-bg: #12261a; --add-fg: #3fb950;
+    --mod-bg: #0f1a2e; --mod-fg: #58a6ff;
+    --del-bg: #2d1216; --del-fg: #f85149;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.8; max-width: 1200px; margin: 0 auto; padding: 3rem 2.5rem; font-size: 22px; }
-  h1 { font-size: 2.6rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.7rem; margin: 1.6rem 0 1.2rem; }
-  h2 { font-size: 1.8rem; margin: 2.5rem 0 1rem; color: var(--accent); }
-  h3 { font-size: 1.4rem; margin: 1.4rem 0 0.6rem; }
-  p, ul, ol { margin: 0.6rem 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; color: var(--fg); background: var(--bg); line-height: 1.8; max-width: 1200px; margin: 0 auto; padding: 3rem 2.5rem; font-size: 20px; }
+  h1 { font-size: 2.4rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.7rem; margin: 1.6rem 0 1.2rem; }
+  h2 { font-size: 1.7rem; margin: 2.5rem 0 1rem; color: var(--accent); }
+  h3 { font-size: 1.35rem; margin: 1.4rem 0 0.6rem; }
+  p, ul, ol { margin: 0.6rem 0; font-size: 20px; }
   ul, ol { padding-left: 1.8rem; }
-  li { margin: 0.2rem 0; }
-  code { font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 1em; background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; }
-  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.4rem; overflow-x: auto; font-size: 1.06rem; line-height: 1.7; position: relative; }
-  pre code { background: none; padding: 0; }
-  table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-  th, td { border: 1px solid var(--border); padding: 0.6rem 0.9rem; text-align: left; font-size: 1.06rem; }
+  li { margin: 0.2rem 0; font-size: 20px; }
+  code { font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 0.95em; background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 3px; color: #e6edf3; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.4rem; overflow-x: auto; font-size: 17px; line-height: 1.7; position: relative; counter-reset: line; }
+  pre code { background: none; padding: 0; font-size: 17px; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 18px; }
+  th, td { border: 1px solid var(--border); padding: 0.6rem 0.9rem; text-align: left; font-size: 18px; vertical-align: top; }
   th { background: var(--code-bg); font-weight: 600; }
-  tr:nth-child(even) { background: #f8fafc; }
-  .meta { color: var(--muted); font-size: 1.05rem; margin-bottom: 1rem; }
+  tr:nth-child(even) { background: #161b22; }
+  .meta { color: var(--muted); font-size: 1.0rem; margin-bottom: 1rem; }
 
   /* ===== Tags ===== */
-  .tag { display: inline-block; padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.95rem; font-weight: 500; }
-  .tag-add { background: #dbeafe; color: #1e40af; }
+  .tag { display: inline-block; padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.9rem; font-weight: 500; }
+  .tag-add { background: #0d2137; color: #58a6ff; }
   .tag-del { background: var(--bad-bg); color: var(--bad-fg); }
   .tag-mod { background: var(--warn-bg); color: var(--warn-fg); }
   .tag-keep { background: var(--good-bg); color: var(--good-fg); }
@@ -39,22 +42,31 @@
   .tag-warn { background: var(--warn-bg); color: var(--warn-fg); }
   .tag-bad { background: var(--bad-bg); color: var(--bad-fg); }
 
-  /* ===== Code Diff Highlighting ===== */
-  .hl-add { color: var(--good-fg); background: #d1fae5; display: inline-block; width: 100%; padding: 0 0.4rem; margin: 0 -0.4rem; }
-  .hl-del { color: var(--bad-fg); background: #fee2e2; display: inline-block; width: 100%; padding: 0 0.4rem; margin: 0 -0.4rem; text-decoration: line-through; }
+  /* ===== 行号（CSS counter，每个含 .ln 的 span 自动编号） ===== */
+  pre code .ln { counter-increment: line; }
+  pre code .ln::before { content: counter(line); display: inline-block; width: 2.5em; margin-right: 1em; color: var(--muted); text-align: right; user-select: none; }
+
+  /* ===== 代码高亮：绿=新增, 蓝=修改, 红=删除 ===== */
+  .hl-add { color: var(--add-fg); background: var(--add-bg); display: inline-block; width: 100%; padding: 0 0.4rem; margin: 0 -0.4rem; }
+  .hl-mod { color: var(--mod-fg); background: var(--mod-bg); display: inline-block; width: 100%; padding: 0 0.4rem; margin: 0 -0.4rem; }
+  .hl-del { color: var(--del-fg); background: var(--del-bg); display: inline-block; width: 100%; padding: 0 0.4rem; margin: 0 -0.4rem; text-decoration: line-through; }
 
   /* ===== Copy Button ===== */
   .copy-wrap { position: relative; margin: 1rem 0; }
-  .copy-btn { position: absolute; top: 8px; right: 10px; padding: 4px 14px; font-size: 0.88rem; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; opacity: 0.85; z-index: 1; }
+  .copy-btn { position: absolute; top: 8px; right: 10px; padding: 4px 14px; font-size: 0.85rem; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; opacity: 0.85; z-index: 1; }
   .copy-btn:hover { opacity: 1; }
   .copy-btn.copied { background: var(--good-fg); }
 
   /* ===== Callout Boxes ===== */
-  .info { background: #dbeafe; border: 1px solid #93c5fd; border-radius: 6px; padding: 0.8rem 1.2rem; margin: 1rem 0; font-size: 1.05rem; }
-  .warning { background: var(--warn-bg); border: 1px solid #fcd34d; border-radius: 6px; padding: 0.8rem 1.2rem; margin: 1rem 0; font-size: 1.05rem; }
+  .info { background: #0d2137; border: 1px solid #1f4f7a; border-radius: 6px; padding: 0.8rem 1.2rem; margin: 1rem 0; font-size: 18px; }
+  .warning { background: var(--warn-bg); border: 1px solid #5c4100; border-radius: 6px; padding: 0.8rem 1.2rem; margin: 1rem 0; font-size: 18px; }
+  .half { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 1.5rem 0; }
+  .box { border: 1.5px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 0.8rem 0; font-size: 18px; }
+  .bad { border-color: #5c1a1f; background: #1a0d0f; }
+  .good { border-color: #1b4d2b; background: #0d1a12; }
 
   /* ===== TOC ===== */
-  .toc { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin: 1rem 0; }
+  .toc { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin: 1rem 0; font-size: 20px; }
   .toc a { color: var(--accent); text-decoration: none; }
   .toc a:hover { text-decoration: underline; }
 
